@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Reality - Patient Check-in Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>🏥 Project Reality</h1>
+                <p>Patient Check-in Dashboard</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader hidden">⏳</span>
+                </button>
+                <p id="login-error" class="error-message hidden"></p>
+            </form>
+            <div class="login-footer">
+                <p>Default: admin / admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>🏥 Project Reality</h1>
+                <p>Patient Check-in Dashboard</p>
+            </div>
+            
+            <div class="user-info">
+                <p class="user-label">👤 Logged in as:</p>
+                <p class="user-name" id="user-display-name">Administrator</p>
+            </div>
+            
+            <button class="btn btn-logout" id="logout-btn">🚪 Logout</button>
+            
+            <hr class="divider">
+            
+            <button class="btn btn-primary btn-block" id="refresh-btn">🔄 Refresh Data</button>
+            <p class="cache-status" id="cache-status">🔄 Click to load data</p>
+            
+            <hr class="divider">
+            
+            <nav class="nav-menu">
+                <p class="nav-label">Navigation</p>
+                <button class="nav-item active" data-page="queue">
+                    <span class="nav-icon">👨‍⚕️</span> Patient Queue
+                </button>
+                <button class="nav-item" data-page="search">
+                    <span class="nav-icon">🔍</span> Search Patients
+                </button>
+                <button class="nav-item" data-page="analytics">
+                    <span class="nav-icon">📊</span> Analytics
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p class="time-display" id="time-display">🕐 --:-- --</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Patient Queue Page -->
+            <div id="page-queue" class="page active">
+                <div class="page-header">
+                    <h1>👨‍⚕️ Patient Queue</h1>
+                    <p id="queue-date">📅 Loading...</p>
+                </div>
+                
+                <p class="filter-hint">📊 Click a card to filter patients</p>
+                
+                <div class="metrics-row" id="metrics-row">
+                    <!-- Metrics will be inserted here -->
+                </div>
+                
+                <div class="section-header" id="queue-section-header">
+                    📊 All Patients (0)
+                </div>
+                
+                <div id="patient-list" class="patient-list">
+                    <div class="loading">Loading patients...</div>
+                </div>
+            </div>
+
+            <!-- Search Patients Page -->
+            <div id="page-search" class="page">
+                <div class="page-header">
+                    <h1>🔍 Search Patients</h1>
+                    <p>Find patients by ID, name, DOB, or phone number</p>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="🔍 Enter patient ID, name, DOB, or phone...">
+                    <button class="btn btn-primary" id="search-btn">Search</button>
+                </div>
+                
+                <div id="search-results" class="patient-list">
+                    <p class="hint-text">Enter a search term to find patients</p>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="page-analytics" class="page">
+                <div class="page-header">
+                    <h1>📊 Analytics Dashboard</h1>
+                    <p>Visual insights from patient check-in data</p>
+                </div>
+                
+                <div class="analytics-controls">
+                    <label for="date-range">Date Range:</label>
+                    <select id="date-range">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30" selected>Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                        <option value="365">All Time</option>
+                    </select>
+                </div>
+                
+                <div class="section-header">📈 Key Metrics</div>
+                
+                <div class="analytics-metrics" id="analytics-metrics">
+                    <!-- Metrics will be inserted here -->
+                </div>
+                
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="section-header">📊 Status Breakdown</div>
+                        <canvas id="chart-status"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">📆 Busiest Days</div>
+                        <canvas id="chart-days"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">⏰ Check-Ins by Hour</div>
+                        <canvas id="chart-hours"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">💳 Insurance Status</div>
+                        <canvas id="chart-insurance"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">👨‍⚕️ Patients by Counselor</div>
+                        <canvas id="chart-counselor"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="section-header">🏠 Residential Program</div>
+                        <canvas id="chart-residential"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Detail Modal -->
+            <div id="patient-modal" class="modal hidden">
+                <div class="modal-content">
+                    <button class="modal-close" id="modal-close">&times;</button>
+                    <div id="patient-detail-content">
+                        <!-- Patient details will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Debug Panel -->
+    <div id="debug-panel" class="debug-panel">
+        <div class="debug-header">
+            <span>🔧 Debug Panel</span>
+            <button id="debug-toggle" class="debug-toggle">▼</button>
+        </div>
+        <div id="debug-content" class="debug-content">
+            <div class="debug-section">
+                <h4>Configuration Status</h4>
+                <div id="debug-config"></div>
+            </div>
+            <div class="debug-section">
+                <h4>API Test</h4>
+                <button id="test-api-btn" class="btn btn-sm btn-primary">Test API Connection</button>
+                <div id="debug-api-result"></div>
+            </div>
+            <div class="debug-section">
+                <h4>Request Log</h4>
+                <div id="debug-log" class="debug-log"></div>
+            </div>
+            <button id="clear-debug-btn" class="btn btn-sm btn-secondary">Clear Log</button>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
