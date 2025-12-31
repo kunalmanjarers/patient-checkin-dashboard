@@ -9,7 +9,7 @@ const CONFIG = {
     // ============================================
     // UPDATE THIS URL AFTER DEPLOYING APPS SCRIPT!
     // ============================================
-    API_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE',
+    API_URL: 'https://script.google.com/macros/s/AKfycbzLdmvxMdFaNVwJ8KbP900kz-6dTh8M-2aYjukgKrJOiWP5Qynb0EJ3CHv4X9AX4fU6GA/exec',
     
     // ============================================
     // DEBUG MODE - Set to true to see debug panel
