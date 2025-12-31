@@ -3,6 +3,121 @@
  */
 
 // ============================================
+// DEBUG FUNCTIONS
+// ============================================
+let debugLogs = [];
+
+function addDebugLog(message, data = null) {
+    const entry = {
+        time: new Date().toLocaleTimeString(),
+        message: message,
+        data: data
+    };
+    debugLogs.unshift(entry);
+    
+    // Keep only last 50 entries
+    if (debugLogs.length > 50) {
+        debugLogs = debugLogs.slice(0, 50);
+    }
+    
+    renderDebugLog();
+}
+
+function renderDebugLog() {
+    const logContainer = document.getElementById('debug-log');
+    if (!logContainer) return;
+    
+    logContainer.innerHTML = debugLogs.map(entry => {
+        const isError = entry.message.includes('❌') || entry.message.includes('Error');
+        const isSuccess = entry.message.includes('✅') || entry.message.includes('Success');
+        
+        return `
+            <div class="debug-log-entry">
+                <div class="debug-log-time">${entry.time}</div>
+                <div class="debug-log-message ${isError ? 'error' : ''} ${isSuccess ? 'success' : ''}">${entry.message}</div>
+                ${entry.data ? `<div class="debug-log-data">${JSON.stringify(entry.data, null, 2).substring(0, 300)}</div>` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+function initDebugPanel() {
+    const debugPanel = document.getElementById('debug-panel');
+    const debugToggle = document.getElementById('debug-toggle');
+    const debugContent = document.getElementById('debug-content');
+    const debugConfig = document.getElementById('debug-config');
+    const testApiBtn = document.getElementById('test-api-btn');
+    const clearDebugBtn = document.getElementById('clear-debug-btn');
+    const debugHeader = document.querySelector('.debug-header');
+    
+    if (!CONFIG.DEBUG_MODE) {
+        if (debugPanel) debugPanel.style.display = 'none';
+        return;
+    }
+    
+    // Show configuration status
+    if (debugConfig) {
+        const apiConfigured = CONFIG.API_URL && CONFIG.API_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+        
+        debugConfig.innerHTML = `
+            <div class="debug-status ${apiConfigured ? 'ok' : 'error'}">
+                <strong>API URL:</strong> ${apiConfigured ? '✅ Configured' : '❌ NOT CONFIGURED'}
+                <br><small>${apiConfigured ? CONFIG.API_URL.substring(0, 60) + '...' : 'Please update js/config.js'}</small>
+            </div>
+            <div class="debug-status ok">
+                <strong>Debug Mode:</strong> ✅ Enabled
+            </div>
+        `;
+    }
+    
+    // Toggle panel
+    if (debugHeader) {
+        debugHeader.addEventListener('click', () => {
+            debugContent.classList.toggle('collapsed');
+            debugToggle.textContent = debugContent.classList.contains('collapsed') ? '▲' : '▼';
+        });
+    }
+    
+    // Test API button
+    if (testApiBtn) {
+        testApiBtn.addEventListener('click', async () => {
+            const resultDiv = document.getElementById('debug-api-result');
+            resultDiv.innerHTML = '<div class="debug-status warning">⏳ Testing...</div>';
+            
+            const result = await API.testConnection();
+            
+            if (result.success) {
+                resultDiv.innerHTML = `
+                    <div class="debug-status ok">
+                        ✅ API Connection Successful!
+                        <br><small>Counselors loaded: ${result.data?.counselors?.length || 0}</small>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="debug-status error">
+                        ❌ API Connection Failed
+                        <br><small>${result.error}</small>
+                        ${result.help ? `<br><small>💡 ${result.help}</small>` : ''}
+                    </div>
+                `;
+            }
+        });
+    }
+    
+    // Clear log button
+    if (clearDebugBtn) {
+        clearDebugBtn.addEventListener('click', () => {
+            debugLogs = [];
+            renderDebugLog();
+        });
+    }
+    
+    addDebugLog('🚀 Debug panel initialized');
+    addDebugLog(`📋 API URL: ${CONFIG.API_URL ? CONFIG.API_URL.substring(0, 50) + '...' : 'NOT SET'}`);
+}
+
+// ============================================
 // STATE MANAGEMENT
 // ============================================
 const state = {
@@ -47,6 +162,9 @@ const elements = {
 // INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize debug panel first
+    initDebugPanel();
+    
     // Check for saved session
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
@@ -60,6 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update time display
     updateTimeDisplay();
     setInterval(updateTimeDisplay, 1000);
+    
+    addDebugLog('📱 App initialized');
 });
 
 function setupEventListeners() {
@@ -105,6 +225,8 @@ async function handleLogin(e) {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     
+    addDebugLog(`🔐 Login attempt for user: ${username}`);
+    
     // Show loading
     const btn = elements.loginForm.querySelector('button');
     btn.disabled = true;
@@ -113,10 +235,12 @@ async function handleLogin(e) {
     const result = await API.login(username, password);
     
     if (result.success) {
+        addDebugLog(`✅ Login successful: ${result.user?.name}`);
         state.user = result.user;
         localStorage.setItem('user', JSON.stringify(result.user));
         showMainApp();
     } else {
+        addDebugLog(`❌ Login failed: ${result.error}`);
         elements.loginError.textContent = result.error || 'Login failed';
         elements.loginError.classList.remove('hidden');
     }
@@ -170,17 +294,39 @@ function navigateTo(page) {
 // ============================================
 async function refreshData() {
     elements.cacheStatus.textContent = '🔄 Loading...';
+    addDebugLog('🔄 Refreshing patient data...');
     
     const result = await API.getTodaysCheckins();
     
     if (result.success) {
-        state.patients = result.patients;
+        state.patients = result.patients || [];
         state.lastUpdate = new Date();
+        
+        addDebugLog(`✅ Loaded ${state.patients.length} patients for today`);
+        
+        if (state.patients.length === 0) {
+            addDebugLog('ℹ️ No patients checked in today. This could be normal if no one has submitted the form today.');
+        } else {
+            addDebugLog(`📋 First patient: ${state.patients[0]?.['First Name']} ${state.patients[0]?.['Last Name']}`);
+        }
+        
         renderPatientQueue();
         elements.cacheStatus.textContent = `✅ Updated ${formatTime(state.lastUpdate)}`;
     } else {
+        addDebugLog(`❌ Failed to load data: ${result.error}`);
         showToast('Failed to load data: ' + result.error, 'error');
         elements.cacheStatus.textContent = '❌ Failed to load';
+        
+        // Show helpful message in patient list
+        elements.patientList.innerHTML = `
+            <div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px; text-align: center;">
+                <h3>⚠️ Failed to Load Data</h3>
+                <p>${result.error}</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">
+                    Check the Debug Panel (bottom right) for more details.
+                </p>
+            </div>
+        `;
     }
 }
 
