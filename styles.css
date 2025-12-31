@@ -1,28 +1,42 @@
 /* ============================================
    CSS STYLES - Patient Check-in Dashboard
+   Project Reality Brand Colors
    ============================================ */
 
-/* ===== CSS VARIABLES ===== */
+/* ===== CSS VARIABLES - PROJECT REALITY BRAND ===== */
 :root {
-    --primary-color: #1E3A5F;
-    --primary-light: #3D5A80;
-    --accent-color: #00B4D8;
-    --success-color: #06D6A0;
-    --warning-color: #FFD166;
-    --danger-color: #EF476F;
-    --purple-color: #9B59B6;
-    --text-dark: #212529;
-    --text-medium: #495057;
-    --text-light: #6C757D;
-    --bg-light: #F8F9FA;
+    /* Primary Brand Colors */
+    --pr-green: #2D8B6F;           /* Main brand green - recovery/growth */
+    --pr-green-dark: #1E6B52;      /* Darker green for hover */
+    --pr-green-light: #3AAB8A;     /* Lighter green */
+    --pr-blue: #3B7DD8;            /* Blue - mental health */
+    --pr-blue-dark: #2A5CAB;       /* Darker blue */
+    --pr-purple: #7C5DC7;          /* Purple - primary care */
+    --pr-purple-dark: #5E42A6;     /* Darker purple */
+    
+    /* Status Colors */
+    --success-color: #10B981;       /* Green for completed */
+    --warning-color: #F59E0B;       /* Amber for waiting */
+    --danger-color: #EF4444;        /* Red for cancelled */
+    --info-color: #3B82F6;          /* Blue for in session */
+    
+    /* Neutral Colors */
+    --text-dark: #1F2937;
+    --text-medium: #4B5563;
+    --text-light: #6B7280;
+    --bg-light: #F3F4F6;
     --bg-white: #FFFFFF;
-    --border-color: #E9ECEF;
-    --shadow-sm: 0 2px 10px rgba(0,0,0,0.08);
-    --shadow-md: 0 4px 15px rgba(0,0,0,0.12);
-    --shadow-lg: 0 8px 25px rgba(0,0,0,0.15);
+    --border-color: #E5E7EB;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+    
+    /* Border Radius */
     --radius-sm: 8px;
     --radius-md: 12px;
-    --radius-lg: 15px;
+    --radius-lg: 16px;
 }
 
 /* ===== RESET & BASE ===== */
@@ -60,13 +74,21 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #EF476F 0%, #F77F88 100%);
+    background: linear-gradient(135deg, var(--pr-green) 0%, var(--pr-green-light) 100%);
     color: white;
 }
 
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--pr-green-dark) 0%, var(--pr-green) 100%);
+}
+
 .btn-secondary {
-    background: var(--primary-color);
+    background: var(--pr-blue);
     color: white;
+}
+
+.btn-secondary:hover {
+    background: var(--pr-blue-dark);
 }
 
 .btn-success {
@@ -100,7 +122,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--pr-green-dark) 0%, var(--pr-green) 50%, var(--pr-blue) 100%);
     padding: 20px;
 }
 
@@ -119,7 +141,7 @@ body {
 }
 
 .login-header h1 {
-    color: var(--primary-color);
+    color: var(--pr-green);
     font-size: 2rem;
     margin-bottom: 5px;
 }
@@ -150,7 +172,7 @@ body {
 
 .form-group input:focus {
     outline: none;
-    border-color: var(--accent-color);
+    border-color: var(--pr-green);
 }
 
 .error-message {
@@ -176,7 +198,7 @@ body {
 /* ===== SIDEBAR ===== */
 .sidebar {
     width: 280px;
-    background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    background: linear-gradient(180deg, var(--pr-green-dark) 0%, var(--pr-green) 100%);
     color: white;
     padding: 20px;
     position: fixed;
@@ -306,7 +328,7 @@ body {
 }
 
 .page-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--pr-green-dark) 0%, var(--pr-green) 100%);
     padding: 30px;
     border-radius: var(--radius-lg);
     margin-bottom: 25px;
@@ -344,7 +366,7 @@ body {
     padding: 20px;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
-    border-left: 4px solid var(--accent-color);
+    border-left: 4px solid var(--pr-green);
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -355,19 +377,19 @@ body {
 }
 
 .metric-card.active {
-    box-shadow: 0 0 0 3px var(--accent-color);
+    box-shadow: 0 0 0 3px var(--pr-green);
 }
 
 .metric-card.waiting { border-left-color: var(--warning-color); }
-.metric-card.assigned { border-left-color: var(--purple-color); }
-.metric-card.in-session { border-left-color: var(--accent-color); }
+.metric-card.assigned { border-left-color: var(--pr-purple); }
+.metric-card.in-session { border-left-color: var(--pr-blue); }
 .metric-card.completed { border-left-color: var(--success-color); }
 .metric-card.cancelled { border-left-color: var(--danger-color); }
 
 .metric-value {
     font-size: 2.2rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--pr-green-dark);
     line-height: 1;
 }
 
@@ -382,7 +404,7 @@ body {
 
 /* ===== SECTION HEADER ===== */
 .section-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--pr-green-dark) 0%, var(--pr-green) 100%);
     color: white;
     padding: 15px 20px;
     border-radius: var(--radius-sm);
@@ -412,15 +434,15 @@ body {
 .patient-name {
     font-size: 1.3rem;
     font-weight: 600;
-    color: var(--primary-color);
+    color: var(--pr-green-dark);
     margin-bottom: 5px;
 }
 
 .patient-id {
     font-size: 0.85rem;
-    color: var(--accent-color);
+    color: var(--pr-green);
     font-family: 'Monaco', 'Consolas', monospace;
-    background: #E8F4F8;
+    background: #E6F4F0;
     padding: 3px 8px;
     border-radius: 4px;
     display: inline-block;
@@ -446,13 +468,13 @@ body {
     background: var(--bg-light);
 }
 
-.flag.insurance { background: #E8F5E9; color: #2E7D32; }
-.flag.self-pay { background: #FFF3E0; color: #E65100; }
-.flag.pregnant { background: #FCE4EC; color: #C2185B; }
-.flag.ua-ready { background: #E0F7FA; color: #00838F; }
-.flag.residential { background: #E3F2FD; color: #1565C0; }
-.flag.mat { background: #F3E5F5; color: #7B1FA2; }
-.flag.moud { background: #E8EAF6; color: #3949AB; }
+.flag.insurance { background: #D1FAE5; color: #065F46; }
+.flag.self-pay { background: #FEF3C7; color: #92400E; }
+.flag.pregnant { background: #FCE7F3; color: #9D174D; }
+.flag.ua-ready { background: #E6F4F0; color: var(--pr-green-dark); }
+.flag.residential { background: #DBEAFE; color: var(--pr-blue-dark); }
+.flag.mat { background: #EDE9F6; color: var(--pr-purple-dark); }
+.flag.moud { background: #E0E7FF; color: #3730A3; }
 
 .attempt-badge {
     font-size: 0.7rem;
@@ -504,10 +526,10 @@ body {
 }
 
 .counselor-assigned {
-    background: #E8D5F2;
+    background: #EDE9F6;
     padding: 10px 15px;
     border-radius: var(--radius-sm);
-    color: #6C3483;
+    color: var(--pr-purple);
     font-weight: 600;
     font-size: 0.9rem;
 }
@@ -528,11 +550,11 @@ body {
     margin-bottom: 10px;
 }
 
-.status-badge.waiting { background: #FFF3CD; color: #856404; }
-.status-badge.assigned { background: #E8D5F2; color: #6C3483; }
-.status-badge.in-session { background: #CCE5FF; color: #004085; }
-.status-badge.completed { background: #D4EDDA; color: #155724; }
-.status-badge.cancelled { background: #F8D7DA; color: #721C24; }
+.status-badge.waiting { background: #FEF3C7; color: #92400E; }
+.status-badge.assigned { background: #EDE9F6; color: var(--pr-purple); }
+.status-badge.in-session { background: #DBEAFE; color: var(--pr-blue-dark); }
+.status-badge.completed { background: #D1FAE5; color: #065F46; }
+.status-badge.cancelled { background: #FEE2E2; color: #991B1B; }
 
 .cancel-reason-box {
     background: #FFF3CD;
@@ -559,7 +581,7 @@ body {
 
 .search-box input:focus {
     outline: none;
-    border-color: var(--accent-color);
+    border-color: var(--pr-green);
 }
 
 .hint-text {
@@ -601,7 +623,7 @@ body {
 .analytics-metric .value {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--pr-green-dark);
 }
 
 .analytics-metric .label {
@@ -673,7 +695,7 @@ body {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background: var(--primary-color);
+    background: var(--pr-green-dark);
     color: white;
     padding: 15px 25px;
     border-radius: var(--radius-sm);
@@ -711,7 +733,7 @@ body {
 }
 
 .detail-header h2 {
-    color: var(--primary-color);
+    color: var(--pr-green-dark);
     font-size: 1.8rem;
 }
 
@@ -775,12 +797,12 @@ body {
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
     margin-bottom: 15px;
-    border-left: 4px solid var(--accent-color);
+    border-left: 4px solid var(--pr-green);
 }
 
 .visit-item.completed { border-left-color: var(--success-color); }
 .visit-item.cancelled { border-left-color: var(--danger-color); }
-.visit-item.assigned { border-left-color: var(--purple-color); }
+.visit-item.assigned { border-left-color: var(--pr-purple); }
 
 .visit-header {
     display: flex;
@@ -838,4 +860,142 @@ body {
     .info-grid, .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+
+/* ===== DEBUG PANEL ===== */
+.debug-panel {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 450px;
+    max-height: 400px;
+    background: #1a1a2e;
+    color: #eee;
+    border-top-left-radius: 10px;
+    box-shadow: -5px -5px 20px rgba(0,0,0,0.3);
+    z-index: 9999;
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 12px;
+}
+
+.debug-header {
+    background: #16213e;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+}
+
+.debug-header span {
+    font-weight: bold;
+    color: #00ff88;
+}
+
+.debug-toggle {
+    background: none;
+    border: none;
+    color: #00ff88;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.debug-content {
+    padding: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.debug-content.collapsed {
+    display: none;
+}
+
+.debug-section {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.debug-section h4 {
+    color: #00b4d8;
+    margin-bottom: 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.debug-log {
+    max-height: 150px;
+    overflow-y: auto;
+    background: #0f0f1a;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.debug-log-entry {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #222;
+}
+
+.debug-log-entry:last-child {
+    border-bottom: none;
+}
+
+.debug-log-time {
+    color: #666;
+    font-size: 10px;
+}
+
+.debug-log-message {
+    color: #eee;
+    margin: 3px 0;
+}
+
+.debug-log-message.error {
+    color: #ff6b6b;
+}
+
+.debug-log-message.success {
+    color: #00ff88;
+}
+
+.debug-log-data {
+    color: #888;
+    font-size: 10px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 60px;
+    overflow-y: auto;
+}
+
+.debug-status {
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.debug-status.ok {
+    background: rgba(0, 255, 136, 0.1);
+    border-left: 3px solid #00ff88;
+}
+
+.debug-status.error {
+    background: rgba(255, 107, 107, 0.1);
+    border-left: 3px solid #ff6b6b;
+}
+
+.debug-status.warning {
+    background: rgba(255, 209, 102, 0.1);
+    border-left: 3px solid #ffd166;
+}
+
+#debug-api-result {
+    margin-top: 10px;
+}
+
+.debug-panel .btn {
+    font-size: 11px;
+    padding: 6px 12px;
 }
